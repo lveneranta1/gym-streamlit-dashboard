@@ -207,3 +207,9 @@ cython_debug/
 marimo/_static/
 marimo/_lsp/
 __marimo__/
+
+# Project-specific: BigQuery credentials
+credentials/*.json
+credentials/**/*.json
+*-key.json
+service-account*.json

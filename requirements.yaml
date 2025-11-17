@@ -1,0 +1,14 @@
+name: gym-streamlit-dashboard
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python>=3.11
+  - pip
+  - pip:
+    - streamlit>=1.28.0
+    - pandas>=2.0.0
+    - pyyaml>=6.0
+    - google-cloud-bigquery>=3.11.0
+    - google-auth>=2.22.0
+    - python-dotenv>=1.0.0

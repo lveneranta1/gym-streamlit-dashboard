@@ -1,11 +1,15 @@
 """Gym Workout Data Uploader to BigQuery - Streamlit Application."""
 import streamlit as st
 import pandas as pd
+from dotenv import load_dotenv
 from modules.config_loader import ConfigLoader
 from modules.csv_parser import CSVParser
 from modules.data_enrichment import DataEnrichment
 from modules.bigquery_uploader import BigQueryUploader
 import traceback
+
+# Load environment variables from .env file
+load_dotenv()
 
 # Page configuration
 st.set_page_config(

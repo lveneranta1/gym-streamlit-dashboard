@@ -48,12 +48,20 @@ A Streamlit web application for uploading workout CSV data to Google BigQuery wi
    - Create a service account in Google Cloud Console
    - Download the JSON key file
    - Grant BigQuery permissions (BigQuery Data Editor, BigQuery Job User)
+   - Save the key file (e.g., in `credentials/service-account-key.json`)
+   - Update `GOOGLE_APPLICATION_CREDENTIALS` in `.env` with the correct path
 
 5. **Configure environment variables:**
    ```bash
    cp .env.example .env
-   # Edit .env with your GCP project ID and credentials path
+   # Edit .env with your actual GCP credentials:
+   # - GCP_PROJECT_ID: Your Google Cloud Project ID
+   # - GOOGLE_APPLICATION_CREDENTIALS: Path to your service account JSON key file
+   # - BQ_DATASET_ID: BigQuery dataset name (e.g., workout_data)
+   # - BQ_TABLE_ID: BigQuery table name (e.g., workouts)
    ```
+   
+   **Note:** A `.env` file with dummy values is included for testing. Replace with your actual credentials before uploading to BigQuery.
 
 ## Configuration
 
