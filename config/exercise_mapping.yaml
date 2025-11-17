@@ -1,0 +1,407 @@
+# Exercise to Muscle Group Mapping Configuration
+version: "1.0"
+
+# Muscle group hierarchy
+muscle_groups:
+  level1:
+    - upper
+    - lower
+    - core
+    - full_body
+    
+  level2:
+    upper: [chest, back, shoulders, triceps, biceps, forearms]
+    lower: [quads, hamstrings, glutes, calves]
+    core: [abs, obliques, lower_back]
+    full_body: [compound]
+
+# Exercise mappings (case-insensitive matching)
+exercises:
+  # Chest exercises
+  - names: 
+      - "bench press"
+      - "barbell bench press"
+      - "dumbbell bench press"
+      - "flat bench press"
+      - "bb bench press"
+      - "db bench press"
+    level1: upper
+    level2: chest
+    
+  - names:
+      - "incline bench press"
+      - "incline press"
+      - "incline dumbbell press"
+      - "incline barbell press"
+    level1: upper
+    level2: chest
+    
+  - names:
+      - "decline bench press"
+      - "decline press"
+    level1: upper
+    level2: chest
+    
+  - names:
+      - "chest fly"
+      - "dumbbell fly"
+      - "cable fly"
+      - "pec fly"
+      - "pec deck"
+      - "flyes"
+    level1: upper
+    level2: chest
+    
+  - names:
+      - "push up"
+      - "pushup"
+      - "push-up"
+    level1: upper
+    level2: chest
+
+  # Back exercises
+  - names:
+      - "deadlift"
+      - "conventional deadlift"
+      - "barbell deadlift"
+    level1: full_body
+    level2: compound
+    
+  - names:
+      - "romanian deadlift"
+      - "rdl"
+      - "stiff leg deadlift"
+      - "stiff legged deadlift"
+    level1: lower
+    level2: hamstrings
+    
+  - names:
+      - "pull up"
+      - "pullup"
+      - "chin up"
+      - "chinup"
+      - "pull-up"
+      - "chin-up"
+    level1: upper
+    level2: back
+    
+  - names:
+      - "barbell row"
+      - "bent over row"
+      - "bent-over row"
+      - "pendlay row"
+      - "bb row"
+    level1: upper
+    level2: back
+    
+  - names:
+      - "dumbbell row"
+      - "one arm row"
+      - "single arm row"
+      - "db row"
+    level1: upper
+    level2: back
+    
+  - names:
+      - "lat pulldown"
+      - "cable pulldown"
+      - "wide grip pulldown"
+      - "lat pull down"
+    level1: upper
+    level2: back
+    
+  - names:
+      - "cable row"
+      - "seated cable row"
+      - "seated row"
+    level1: upper
+    level2: back
+    
+  - names:
+      - "t-bar row"
+      - "t bar row"
+      - "tbar row"
+    level1: upper
+    level2: back
+
+  # Leg exercises - Quads
+  - names:
+      - "squat"
+      - "back squat"
+      - "barbell squat"
+      - "high bar squat"
+      - "low bar squat"
+      - "bb squat"
+    level1: lower
+    level2: quads
+    
+  - names:
+      - "front squat"
+    level1: lower
+    level2: quads
+    
+  - names:
+      - "goblet squat"
+    level1: lower
+    level2: quads
+    
+  - names:
+      - "leg press"
+      - "machine leg press"
+    level1: lower
+    level2: quads
+    
+  - names:
+      - "leg extension"
+      - "quad extension"
+      - "machine leg extension"
+    level1: lower
+    level2: quads
+    
+  - names:
+      - "lunge"
+      - "walking lunge"
+      - "reverse lunge"
+      - "forward lunge"
+      - "lunges"
+    level1: lower
+    level2: quads
+    
+  - names:
+      - "bulgarian split squat"
+      - "split squat"
+    level1: lower
+    level2: quads
+
+  # Leg exercises - Hamstrings
+  - names:
+      - "leg curl"
+      - "hamstring curl"
+      - "lying leg curl"
+      - "seated leg curl"
+      - "machine leg curl"
+    level1: lower
+    level2: hamstrings
+    
+  - names:
+      - "nordic curl"
+      - "nordic hamstring curl"
+    level1: lower
+    level2: hamstrings
+
+  # Leg exercises - Glutes
+  - names:
+      - "hip thrust"
+      - "barbell hip thrust"
+      - "glute bridge"
+    level1: lower
+    level2: glutes
+
+  # Leg exercises - Calves
+  - names:
+      - "calf raise"
+      - "standing calf raise"
+      - "seated calf raise"
+      - "machine calf raise"
+    level1: lower
+    level2: calves
+
+  # Shoulder exercises
+  - names:
+      - "overhead press"
+      - "military press"
+      - "shoulder press"
+      - "barbell overhead press"
+      - "ohp"
+      - "strict press"
+    level1: upper
+    level2: shoulders
+    
+  - names:
+      - "dumbbell shoulder press"
+      - "dumbbell press"
+      - "seated dumbbell press"
+      - "db shoulder press"
+    level1: upper
+    level2: shoulders
+    
+  - names:
+      - "arnold press"
+    level1: upper
+    level2: shoulders
+    
+  - names:
+      - "lateral raise"
+      - "side raise"
+      - "dumbbell lateral raise"
+      - "lat raise"
+    level1: upper
+    level2: shoulders
+    
+  - names:
+      - "front raise"
+      - "front delt raise"
+    level1: upper
+    level2: shoulders
+    
+  - names:
+      - "rear delt fly"
+      - "rear delt raise"
+      - "reverse fly"
+      - "reverse flyes"
+    level1: upper
+    level2: shoulders
+    
+  - names:
+      - "face pull"
+      - "face pulls"
+      - "cable face pull"
+    level1: upper
+    level2: shoulders
+
+  # Arm exercises - Biceps
+  - names:
+      - "bicep curl"
+      - "barbell curl"
+      - "ez bar curl"
+      - "dumbbell curl"
+      - "bb curl"
+      - "db curl"
+    level1: upper
+    level2: biceps
+    
+  - names:
+      - "hammer curl"
+      - "dumbbell hammer curl"
+    level1: upper
+    level2: biceps
+    
+  - names:
+      - "preacher curl"
+      - "preacher curls"
+    level1: upper
+    level2: biceps
+    
+  - names:
+      - "concentration curl"
+    level1: upper
+    level2: biceps
+    
+  - names:
+      - "cable curl"
+      - "cable bicep curl"
+    level1: upper
+    level2: biceps
+
+  # Arm exercises - Triceps
+  - names:
+      - "tricep extension"
+      - "overhead extension"
+      - "overhead tricep extension"
+      - "skull crusher"
+      - "lying tricep extension"
+      - "skullcrusher"
+    level1: upper
+    level2: triceps
+    
+  - names:
+      - "tricep dip"
+      - "dips"
+      - "chest dip"
+      - "triceps dip"
+    level1: upper
+    level2: triceps
+    
+  - names:
+      - "tricep pushdown"
+      - "cable pushdown"
+      - "rope pushdown"
+      - "triceps pushdown"
+    level1: upper
+    level2: triceps
+    
+  - names:
+      - "close grip bench press"
+      - "close-grip bench press"
+      - "cgbp"
+    level1: upper
+    level2: triceps
+
+  # Core exercises
+  - names:
+      - "plank"
+      - "front plank"
+    level1: core
+    level2: abs
+    
+  - names:
+      - "side plank"
+    level1: core
+    level2: obliques
+    
+  - names:
+      - "crunch"
+      - "sit up"
+      - "situp"
+      - "sit-up"
+    level1: core
+    level2: abs
+    
+  - names:
+      - "hanging leg raise"
+      - "leg raise"
+    level1: core
+    level2: abs
+    
+  - names:
+      - "russian twist"
+      - "russian twists"
+    level1: core
+    level2: obliques
+    
+  - names:
+      - "ab wheel"
+      - "ab rollout"
+    level1: core
+    level2: abs
+
+# Fuzzy matching rules for unmapped exercises
+fuzzy_rules:
+  - keyword: "press"
+    exclude: ["leg press", "calf"]
+    level1: upper
+    level2: chest
+    
+  - keyword: "curl"
+    level1: upper
+    level2: biceps
+    
+  - keyword: "squat"
+    level1: lower
+    level2: quads
+    
+  - keyword: "deadlift"
+    level1: lower
+    level2: hamstrings
+    
+  - keyword: "row"
+    level1: upper
+    level2: back
+    
+  - keyword: "raise"
+    level1: upper
+    level2: shoulders
+    
+  - keyword: "pull"
+    level1: upper
+    level2: back
+    
+  - keyword: "extension"
+    exclude: ["leg extension"]
+    level1: upper
+    level2: triceps
+
+# Default for completely unknown exercises
+default_mapping:
+  level1: upper
+  level2: unknown

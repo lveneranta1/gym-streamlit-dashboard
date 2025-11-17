@@ -1,0 +1,61 @@
+# CSV Schema Configuration
+version: "1.0"
+
+required_columns:
+  datetime:
+    type: datetime
+    formats:
+      - "%Y-%m-%d %H:%M:%S"
+      - "%Y-%m-%d"
+      - "%m/%d/%Y"
+      - "%d/%m/%Y"
+    aliases: ["datetime", "date", "timestamp", "workout_date", "time"]
+    
+  workout_name:
+    type: string
+    aliases: ["workout_name", "workout", "session_name", "workout_type", "session"]
+    
+  exercise_name:
+    type: string
+    aliases: ["exercise_name", "exercise", "movement", "name", "exercise_type"]
+    
+  weight:
+    type: float
+    aliases: ["weight", "weight_kg", "weight_lbs", "load", "resistance"]
+    validation:
+      min: 0
+      max: 1000
+    
+  reps:
+    type: integer
+    aliases: ["reps", "repetitions", "rep_count", "rep"]
+    validation:
+      min: 1
+      max: 100
+
+optional_columns:
+  sets:
+    type: integer
+    default: 1
+    aliases: ["sets", "set_count", "num_sets"]
+    validation:
+      min: 1
+      max: 20
+    
+  notes:
+    type: string
+    default: ""
+    aliases: ["notes", "comments", "description", "note"]
+    
+  duration_minutes:
+    type: integer
+    default: null
+    aliases: ["duration", "duration_minutes", "time_minutes", "duration_mins"]
+    validation:
+      min: 0
+      max: 300
+
+# Configuration options
+allow_extra_columns: true
+strict_mode: false  # If true, reject uploads with missing required columns
+case_sensitive: false  # Column name matching is case-insensitive
