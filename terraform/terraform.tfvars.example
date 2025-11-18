@@ -1,0 +1,10 @@
+# Required: Your GCP project ID (created manually in console)
+# Replace with your actual project ID
+project_id = "my-workout-tracker-2025"
+
+# Optional: Override defaults if needed
+# region                       = "europe-north1"
+# dataset_id                   = "workout_data"
+# table_id                     = "workouts"
+# service_account_id           = "workout-app-sa"
+# service_account_display_name = "Workout App Service Account"

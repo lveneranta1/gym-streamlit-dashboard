@@ -213,3 +213,19 @@ credentials/*.json
 credentials/**/*.json
 *-key.json
 service-account*.json
+
+# Terraform
+terraform/.terraform/
+terraform/.terraform.lock.hcl
+terraform/terraform.tfstate
+terraform/terraform.tfstate.backup
+terraform/*.tfvars
+!terraform/terraform.tfvars.example
+terraform/keys/
+terraform/*.json
+!terraform/*.example
+
+# Service account keys (anywhere)
+*.json
+!config/*.json
+!config/**/*.json
