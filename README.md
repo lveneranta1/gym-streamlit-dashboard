@@ -88,7 +88,7 @@ Configures BigQuery connection settings and table schema.
 2. **Upload your CSV file:**
    - Navigate to the "Upload" tab
    - Drag and drop or select your CSV file
-   - Required columns: datetime, workout_name, exercise_name, weight, reps
+   - Required columns: Date, Workout Name, Exercise Name, Weight (kg), Reps
 
 3. **Review the preview:**
    - Check parsed data
@@ -106,22 +106,23 @@ Your CSV file should contain at least these columns:
 
 | Column | Type | Description | Required |
 |--------|------|-------------|----------|
-| datetime | timestamp | Date and time of workout | Yes |
-| workout_name | string | Name of workout session | Yes |
-| exercise_name | string | Name of exercise | Yes |
-| weight | float | Weight used (kg or lbs) | Yes |
-| reps | integer | Number of repetitions | Yes |
-| sets | integer | Number of sets | No |
-| notes | string | Additional notes | No |
-| duration_minutes | integer | Duration in minutes | No |
+| Date | timestamp | Date and time of workout | Yes |
+| Workout Name | string | Name of workout session | Yes |
+| Exercise Name | string | Name of exercise | Yes |
+| Weight (kg) | float | Weight used in kilograms | Yes |
+| Reps | integer | Number of repetitions | Yes |
+| Weight (lb) | float | Weight used in pounds | No |
+| Notes | string | Additional notes | No |
+| Duration | integer | Duration in minutes | No |
 
 ### Example CSV:
 
 ```csv
-datetime,workout_name,exercise_name,weight,reps,sets,notes
-2024-01-15 09:00:00,Push Day,Bench Press,100,8,3,Felt strong
-2024-01-15 09:15:00,Push Day,Incline Bench Press,80,10,3,
-2024-01-17 10:00:00,Pull Day,Deadlift,150,5,3,New PR!
+Date,Workout Name,Exercise Name,Reps,Weight (kg),Weight (lb),Notes,Duration
+2024-12-14 18:12:33,Improvised Workout,Incline Bench Press,10,50.0,110.231131,,0
+2024-12-14 18:15:22,Improvised Workout,Incline Bench Press,4,60.0,132.277357,,0
+2024-12-15 09:00:00,Push Day,Bench Press,8,100.0,220.462262,,0
+2024-12-17 10:00:00,Pull Day,Deadlift,5,150.0,330.693393,New PR!,0
 ```
 
 ## Muscle Group Mappings

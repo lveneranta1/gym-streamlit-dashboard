@@ -1,52 +1,51 @@
-datetime,workout_name,exercise_name,weight,reps,sets,notes
-2024-01-15 09:00:00,Push Day,Bench Press,100,8,3,Felt strong
-2024-01-15 09:15:00,Push Day,Incline Bench Press,80,10,3,
-2024-01-15 09:30:00,Push Day,Dumbbell Fly,25,12,3,
-2024-01-15 09:45:00,Push Day,Overhead Press,60,8,3,
-2024-01-15 10:00:00,Push Day,Lateral Raise,15,12,3,
-2024-01-15 10:15:00,Push Day,Tricep Pushdown,30,12,3,
-2024-01-17 10:00:00,Pull Day,Deadlift,150,5,3,New PR!
-2024-01-17 10:20:00,Pull Day,Pull Up,0,10,3,Bodyweight
-2024-01-17 10:35:00,Pull Day,Barbell Row,90,8,3,
-2024-01-17 10:50:00,Pull Day,Lat Pulldown,70,10,3,
-2024-01-17 11:05:00,Pull Day,Dumbbell Row,35,10,3,
-2024-01-17 11:20:00,Pull Day,Bicep Curl,20,12,3,
-2024-01-17 11:35:00,Pull Day,Hammer Curl,25,10,3,
-2024-01-19 08:00:00,Leg Day,Squat,120,10,3,
-2024-01-19 08:20:00,Leg Day,Leg Press,200,12,3,
-2024-01-19 08:35:00,Leg Day,Leg Curl,60,12,3,
-2024-01-19 08:50:00,Leg Day,Leg Extension,70,12,3,
-2024-01-19 09:05:00,Leg Day,Calf Raise,100,15,3,
-2024-01-19 09:20:00,Leg Day,Romanian Deadlift,80,10,3,
-2024-01-22 09:00:00,Upper Body,Bench Press,105,6,3,Increasing weight
-2024-01-22 09:15:00,Upper Body,Incline Bench Press,85,8,3,
-2024-01-22 09:30:00,Upper Body,Overhead Press,65,6,3,
-2024-01-22 09:45:00,Upper Body,Barbell Row,95,8,3,
-2024-01-22 10:00:00,Upper Body,Pull Up,0,12,3,Bodyweight
-2024-01-22 10:15:00,Upper Body,Dumbbell Curl,22,10,3,
-2024-01-22 10:30:00,Upper Body,Tricep Extension,25,12,3,
-2024-01-24 10:00:00,Lower Body,Front Squat,90,8,3,
-2024-01-24 10:20:00,Lower Body,Bulgarian Split Squat,30,10,3,Per leg
-2024-01-24 10:40:00,Lower Body,Leg Curl,65,10,3,
-2024-01-24 10:55:00,Lower Body,Leg Extension,75,10,3,
-2024-01-24 11:10:00,Lower Body,Hip Thrust,140,12,3,
-2024-01-24 11:25:00,Lower Body,Calf Raise,110,15,3,
-2024-01-26 09:00:00,Push Day,Bench Press,102,8,3,
-2024-01-26 09:15:00,Push Day,Incline Dumbbell Press,40,10,3,
-2024-01-26 09:30:00,Push Day,Cable Fly,15,15,3,
-2024-01-26 09:45:00,Push Day,Dumbbell Shoulder Press,30,10,3,
-2024-01-26 10:00:00,Push Day,Front Raise,12,12,3,
-2024-01-26 10:15:00,Push Day,Tricep Dip,0,10,3,Bodyweight
-2024-01-29 10:00:00,Pull Day,Deadlift,155,5,3,PR!
-2024-01-29 10:20:00,Pull Day,Pull Up,0,11,3,Bodyweight
-2024-01-29 10:35:00,Pull Day,T-Bar Row,60,10,3,
-2024-01-29 10:50:00,Pull Day,Cable Row,80,10,3,
-2024-01-29 11:05:00,Pull Day,Face Pull,25,15,3,
-2024-01-29 11:20:00,Pull Day,Preacher Curl,15,12,3,
-2024-01-29 11:35:00,Pull Day,Concentration Curl,12,10,3,
-2024-01-31 08:00:00,Leg Day,Squat,125,8,3,
-2024-01-31 08:20:00,Leg Day,Leg Press,210,10,3,
-2024-01-31 08:35:00,Leg Day,Walking Lunge,25,12,3,Per leg
-2024-01-31 08:50:00,Leg Day,Leg Curl,65,10,3,
-2024-01-31 09:05:00,Leg Day,Romanian Deadlift,85,10,3,
-2024-01-31 09:20:00,Leg Day,Calf Raise,110,20,3,
+Date,Workout Name,Exercise Name,Reps,Weight (kg),Weight (lb),Notes,Duration
+2024-12-14 18:12:33,Improvised Workout,Incline Bench Press,10,50.0,110.231131,,0
+2024-12-14 18:15:22,Improvised Workout,Incline Bench Press,4,60.0,132.277357,,0
+2024-12-14 18:16:46,Improvised Workout,Incline Bench Press,6,50.0,110.231131,,0
+2024-12-14 18:18:44,Improvised Workout,Incline Bench Press,6,50.0,110.231131,,0
+2024-12-14 18:21:11,Improvised Workout,Incline Bench Press,6,50.0,110.231131,,0
+2024-12-15 09:00:00,Push Day,Bench Press,8,100.0,220.462262,,0
+2024-12-15 09:15:00,Push Day,Incline Bench Press,10,80.0,176.369810,,0
+2024-12-15 09:30:00,Push Day,Dumbbell Fly,12,25.0,55.115566,,0
+2024-12-15 09:45:00,Push Day,Overhead Press,8,60.0,132.277357,,0
+2024-12-15 10:00:00,Push Day,Lateral Raise,12,15.0,33.069339,,0
+2024-12-15 10:15:00,Push Day,Tricep Pushdown,12,30.0,66.138679,,0
+2024-12-17 10:00:00,Pull Day,Deadlift,5,150.0,330.693393,New PR!,0
+2024-12-17 10:20:00,Pull Day,Pull Up,10,0.0,0.0,Bodyweight,0
+2024-12-17 10:35:00,Pull Day,Barbell Row,8,90.0,198.416036,,0
+2024-12-17 10:50:00,Pull Day,Lat Pulldown,10,70.0,154.323584,,0
+2024-12-17 11:05:00,Pull Day,Dumbbell Row,10,35.0,77.161793,,0
+2024-12-17 11:20:00,Pull Day,Bicep Curl,12,20.0,44.092453,,0
+2024-12-17 11:35:00,Pull Day,Hammer Curl,10,25.0,55.115566,,0
+2024-12-19 08:00:00,Leg Day,Squat,10,120.0,264.554715,,0
+2024-12-19 08:20:00,Leg Day,Leg Press,12,200.0,440.924524,,0
+2024-12-19 08:35:00,Leg Day,Leg Curl,12,60.0,132.277357,,0
+2024-12-19 08:50:00,Leg Day,Leg Extension,12,70.0,154.323584,,0
+2024-12-19 09:05:00,Leg Day,Calf Raise,15,100.0,220.462262,,0
+2024-12-19 09:20:00,Leg Day,Romanian Deadlift,10,80.0,176.369810,,0
+2024-12-22 09:00:00,Upper Body,Bench Press,6,105.0,231.485375,Increasing weight,0
+2024-12-22 09:15:00,Upper Body,Incline Bench Press,8,85.0,187.392898,,0
+2024-12-22 09:30:00,Upper Body,Overhead Press,6,65.0,143.300471,,0
+2024-12-22 09:45:00,Upper Body,Barbell Row,8,95.0,209.439149,,0
+2024-12-22 10:00:00,Upper Body,Pull Up,12,0.0,0.0,Bodyweight,0
+2024-12-22 10:15:00,Upper Body,Dumbbell Curl,10,22.0,48.501698,,0
+2024-12-22 10:30:00,Upper Body,Tricep Extension,12,25.0,55.115566,,0
+2024-12-24 10:00:00,Lower Body,Front Squat,8,90.0,198.416036,,0
+2024-12-24 10:20:00,Lower Body,Bulgarian Split Squat,10,30.0,66.138679,Per leg,0
+2024-12-24 10:40:00,Lower Body,Leg Curl,10,65.0,143.300471,,0
+2024-12-24 10:55:00,Lower Body,Leg Extension,10,75.0,165.346697,,0
+2024-12-24 11:10:00,Lower Body,Hip Thrust,12,140.0,308.647166,,0
+2024-12-24 11:25:00,Lower Body,Calf Raise,15,110.0,242.508488,,0
+2024-12-26 09:00:00,Push Day,Bench Press,8,102.0,224.871507,,0
+2024-12-26 09:15:00,Push Day,Incline Dumbbell Press,10,40.0,88.184905,,0
+2024-12-26 09:30:00,Push Day,Cable Fly,15,15.0,33.069339,,0
+2024-12-26 09:45:00,Push Day,Dumbbell Shoulder Press,10,30.0,66.138679,,0
+2024-12-26 10:00:00,Push Day,Front Raise,12,12.0,26.455471,,0
+2024-12-26 10:15:00,Push Day,Tricep Dip,10,0.0,0.0,Bodyweight,0
+2024-12-29 10:00:00,Pull Day,Deadlift,5,155.0,341.716481,PR!,0
+2024-12-29 10:20:00,Pull Day,Pull Up,11,0.0,0.0,Bodyweight,0
+2024-12-29 10:35:00,Pull Day,T-Bar Row,10,60.0,132.277357,,0
+2024-12-29 10:50:00,Pull Day,Cable Row,10,80.0,176.369810,,0
+2024-12-29 11:05:00,Pull Day,Face Pull,15,25.0,55.115566,,0
+2024-12-29 11:20:00,Pull Day,Preacher Curl,12,15.0,33.069339,,0
+2024-12-29 11:35:00,Pull Day,Concentration Curl,10,12.0,26.455471,,0

@@ -47,6 +47,9 @@ class CSVParser:
         if df.empty:
             raise ValueError("CSV file is empty")
         
+        # Clean column names first (lowercase + underscores)
+        df = self._clean_column_names(df)
+        
         # Map columns to standard names
         df = self._map_columns(df)
         
@@ -66,6 +69,32 @@ class CSVParser:
         if self.schema.get('strict_mode', False) and self.errors:
             raise ValueError(f"Validation failed: {'; '.join(self.errors)}")
         
+        return df
+    
+    def _clean_column_names(self, df: pd.DataFrame) -> pd.DataFrame:
+        """Clean column names to use lowercase and underscores only.
+        
+        Args:
+            df: Input DataFrame
+            
+        Returns:
+            DataFrame with cleaned column names
+        """
+        # Convert column names to lowercase and replace spaces/special chars with underscores
+        cleaned_columns = {}
+        for col in df.columns:
+            # Convert to lowercase
+            cleaned = col.lower()
+            # Replace spaces and parentheses with underscores
+            cleaned = cleaned.replace(' ', '_').replace('(', '_').replace(')', '_')
+            # Remove consecutive underscores
+            while '__' in cleaned:
+                cleaned = cleaned.replace('__', '_')
+            # Remove leading/trailing underscores
+            cleaned = cleaned.strip('_')
+            cleaned_columns[col] = cleaned
+        
+        df = df.rename(columns=cleaned_columns)
         return df
     
     def _map_columns(self, df: pd.DataFrame) -> pd.DataFrame:
@@ -266,9 +295,9 @@ class CSVParser:
                         f"Column '{col_name}': {null_count} null values found (required field)"
                     )
         
-        # Validate datetime is not in the future
-        if 'datetime' in df.columns:
-            future_dates = df[df['datetime'] > pd.Timestamp.now()]
+        # Validate date is not in the future
+        if 'date' in df.columns:
+            future_dates = df[df['date'] > pd.Timestamp.now()]
             if not future_dates.empty:
                 self.warnings.append(
                     f"Found {len(future_dates)} entries with future dates"

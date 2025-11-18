@@ -94,7 +94,7 @@ with tabs[0]:
     uploaded_file = st.file_uploader(
         "Choose a CSV file",
         type=["csv"],
-        help="Upload your workout data CSV file. Required columns: datetime, workout_name, exercise_name, weight, reps"
+        help="Upload your workout data CSV file. Required columns: date, workout_name, exercise_name, weight_kg, reps"
     )
     
     if uploaded_file is not None:
@@ -177,7 +177,7 @@ with tabs[0]:
             
             # Show enriched data preview
             st.subheader("📈 Enriched Data Preview")
-            preview_cols = ['exercise_name', 'weight', 'reps', 'muscle_group_level1', 'muscle_group_level2']
+            preview_cols = ['exercise_name', 'weight_kg', 'reps', 'muscle_group_level1', 'muscle_group_level2']
             available_cols = [col for col in preview_cols if col in df_enriched.columns]
             st.dataframe(df_enriched[available_cols].head(10), use_container_width=True)
             
