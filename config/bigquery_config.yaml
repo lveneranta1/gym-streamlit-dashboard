@@ -80,3 +80,16 @@ upload:
   skip_leading_rows: 0
   allow_jagged_rows: false
   allow_quoted_newlines: true
+
+# BigQuery views configuration
+views:
+  enabled: true
+  dataset_id: "${BQ_DATASET_ID}"
+  view_definitions:
+    - name: "workout_frequency_by_muscle_group"
+      sql_file: "sql/views/workout_frequency_by_muscle_group.sql"
+    - name: "workout_frequency_by_exercise"
+      sql_file: "sql/views/workout_frequency_by_exercise.sql"
+    - name: "exercise_performance_metrics"
+      sql_file: "sql/views/exercise_performance_metrics.sql"
+  refresh_on_upload: true

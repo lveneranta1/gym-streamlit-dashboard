@@ -1,69 +1,26 @@
 """Gym Workout Data Uploader to BigQuery - Streamlit Application."""
 import streamlit as st
 import pandas as pd
-from dotenv import load_dotenv
-from modules.config_loader import ConfigLoader
+from modules.app_common import (
+    init_page_config,
+    get_config_loader,
+    get_bigquery_uploader,
+    render_sidebar,
+    check_environment_vars,
+    show_env_var_warning
+)
 from modules.csv_parser import CSVParser
 from modules.data_enrichment import DataEnrichment
-from modules.bigquery_uploader import BigQueryUploader
 import traceback
 
-# Load environment variables from .env file
-load_dotenv()
-
-# Page configuration
-st.set_page_config(
-    page_title="Workout Data Uploader",
-    page_icon="🏋️",
-    layout="wide",
-    initial_sidebar_state="expanded"
-)
+# Initialize page configuration
+init_page_config(page_title="Workout Data Uploader", page_icon="🏋️")
 
 # Initialize configuration loader
-@st.cache_resource
-def get_config_loader():
-    """Get cached configuration loader."""
-    try:
-        return ConfigLoader()
-    except Exception as e:
-        st.error(f"Failed to load configurations: {e}")
-        return None
-
 config_loader = get_config_loader()
 
-# Sidebar
-def render_sidebar():
-    """Render sidebar with app information and status."""
-    st.sidebar.title("🏋️ Workout Uploader")
-    st.sidebar.markdown("---")
-    
-    # Configuration status
-    st.sidebar.subheader("Configuration Status")
-    
-    if config_loader:
-        try:
-            # Check environment variables
-            all_valid, missing = config_loader.validate_env_vars()
-            
-            if all_valid:
-                st.sidebar.success("✅ Environment configured")
-            else:
-                st.sidebar.error("❌ Missing environment variables")
-                with st.sidebar.expander("Show missing variables"):
-                    for var in missing:
-                        st.write(f"- {var}")
-        except Exception as e:
-            st.sidebar.error(f"Error checking config: {e}")
-    
-    st.sidebar.markdown("---")
-    st.sidebar.subheader("About")
-    st.sidebar.info(
-        "Upload workout CSV files to Google BigQuery with automatic "
-        "exercise-to-muscle group mapping."
-    )
-    
-    st.sidebar.markdown("---")
-    st.sidebar.caption("Version 1.0.0")
+# Render sidebar
+render_sidebar(config_loader)
 
 # Main title
 st.title("🏋️ Workout Data Uploader to BigQuery")
@@ -82,13 +39,9 @@ with tabs[0]:
         st.stop()
     
     # Check environment variables
-    all_valid, missing = config_loader.validate_env_vars()
+    all_valid, missing = check_environment_vars(config_loader)
     if not all_valid:
-        st.warning("⚠️ Some environment variables are not configured. BigQuery upload may fail.")
-        with st.expander("Show missing variables"):
-            for var in missing:
-                st.write(f"- `{var}`")
-            st.info("Please set these in your `.env` file. See `.env.example` for reference.")
+        show_env_var_warning(missing)
     
     # File uploader
     uploaded_file = st.file_uploader(
@@ -205,10 +158,12 @@ with tabs[0]:
                     st.stop()
                 
                 try:
-                    with st.spinner("Initializing BigQuery client..."):
-                        bq_config = config_loader.get_bigquery_config()
-                        uploader = BigQueryUploader(bq_config)
-                        uploader.initialize_client()
+                    # Get or create BigQuery uploader
+                    uploader = get_bigquery_uploader(config_loader)
+                    
+                    if not uploader:
+                        st.error("Failed to initialize BigQuery uploader. Check your configuration.")
+                        st.stop()
                     
                     st.success("✅ BigQuery client initialized")
                     
@@ -230,6 +185,39 @@ with tabs[0]:
                             st.metric("Duration", f"{result['duration_seconds']:.2f}s")
                         with col3:
                             st.metric("Table", result['table'].split('.')[-1])
+                        
+                        # Upload exercise mapping table
+                        with st.spinner("Uploading exercise mapping table..."):
+                            mapping_result = uploader.upload_exercise_mapping(exercise_mapping)
+                        
+                        if mapping_result['success']:
+                            st.success(f"✅ Exercise mapping table updated ({mapping_result['rows_uploaded']} mappings)")
+                        else:
+                            st.warning(f"⚠️ Exercise mapping upload failed (non-critical): {mapping_result.get('error', 'Unknown error')}")
+                        
+                        # Refresh BigQuery views
+                        with st.spinner("Refreshing analytical views..."):
+                            from modules.bigquery_views import BigQueryViewManager
+                            
+                            bq_config = config_loader.get_bigquery_config()
+                            connection_config = bq_config.get('connection', {})
+                            project_id = connection_config.get('project_id')
+                            dataset_id = connection_config.get('dataset_id')
+                            
+                            view_manager = BigQueryViewManager(uploader.client, project_id, dataset_id)
+                            
+                            views_config = bq_config.get('views', {})
+                            if views_config.get('enabled', False) and views_config.get('refresh_on_upload', True):
+                                view_definitions = views_config.get('view_definitions', [])
+                                view_results = view_manager.refresh_all_views(view_definitions)
+                                
+                                successful_views = sum(1 for status in view_results.values() if status)
+                                total_views = len(view_results)
+                                
+                                if successful_views == total_views:
+                                    st.success(f"✅ All {total_views} analytical views refreshed")
+                                else:
+                                    st.warning(f"⚠️ Views refreshed: {successful_views}/{total_views} successful")
                         
                         st.balloons()
                     else:

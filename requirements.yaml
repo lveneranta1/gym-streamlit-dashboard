@@ -4,3 +4,4 @@ pyyaml
 google-cloud-bigquery
 google-auth
 python-dotenv
+plotly>=5.0.0
