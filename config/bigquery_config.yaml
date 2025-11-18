@@ -7,7 +7,7 @@ connection:
   dataset_id: "${BQ_DATASET_ID}"
   table_id: "${BQ_TABLE_ID}"
   credentials_path: "${GOOGLE_APPLICATION_CREDENTIALS}"
-  location: "US"  # BigQuery dataset location
+  location: "europe-north1"  # BigQuery dataset location (must match dataset region)
 
 # BigQuery table schema
 table_schema:
