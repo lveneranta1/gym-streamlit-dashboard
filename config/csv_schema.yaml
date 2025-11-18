@@ -2,26 +2,26 @@
 version: "1.0"
 
 required_columns:
-  datetime:
+  date:
     type: datetime
     formats:
       - "%Y-%m-%d %H:%M:%S"
       - "%Y-%m-%d"
       - "%m/%d/%Y"
       - "%d/%m/%Y"
-    aliases: ["datetime", "date", "timestamp", "workout_date", "time"]
+    aliases: ["date", "datetime", "timestamp", "workout_date", "time"]
     
   workout_name:
     type: string
-    aliases: ["workout_name", "workout", "session_name", "workout_type", "session"]
+    aliases: ["workout_name", "workout name", "workout", "session_name", "workout_type", "session"]
     
   exercise_name:
     type: string
-    aliases: ["exercise_name", "exercise", "movement", "name", "exercise_type"]
+    aliases: ["exercise_name", "exercise name", "exercise", "movement", "name", "exercise_type"]
     
-  weight:
+  weight_kg:
     type: float
-    aliases: ["weight", "weight_kg", "weight_lbs", "load", "resistance"]
+    aliases: ["weight_kg", "weight (kg)", "weight", "weight_kgs", "load", "resistance"]
     validation:
       min: 0
       max: 1000
@@ -34,20 +34,20 @@ required_columns:
       max: 100
 
 optional_columns:
-  sets:
-    type: integer
-    default: 1
-    aliases: ["sets", "set_count", "num_sets"]
+  weight_lb:
+    type: float
+    default: null
+    aliases: ["weight_lb", "weight (lb)", "weight_lbs", "weight_pounds"]
     validation:
-      min: 1
-      max: 20
-    
+      min: 0
+      max: 2000
+  
   notes:
     type: string
     default: ""
     aliases: ["notes", "comments", "description", "note"]
     
-  duration_minutes:
+  duration:
     type: integer
     default: null
     aliases: ["duration", "duration_minutes", "time_minutes", "duration_mins"]

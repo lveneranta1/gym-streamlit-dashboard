@@ -56,7 +56,7 @@ As a hobby project developer, I need a service account with appropriate permissi
 - **FR-002**: Infrastructure code MUST link the project to a billing account (provided as input variable)
 - **FR-003**: Infrastructure code MUST enable required GCP APIs (BigQuery API, IAM API) in the new project
 - **FR-004**: Infrastructure code MUST provision a BigQuery dataset to store workout data in the Europe (Sweden) region
-- **FR-005**: Infrastructure code MUST create a BigQuery table with schema matching the application's data model (datetime, workout_name, exercise_name, weight, reps, sets, notes, duration_minutes, muscle_group_level1, muscle_group_level2, upload_timestamp, data_source)
+- **FR-005**: Infrastructure code MUST create a BigQuery table with schema matching the application's data model (date, workout_name, exercise_name, weight_kg, weight_lb, reps, notes, duration, muscle_group_level1, muscle_group_level2, upload_timestamp, data_source)
 
 #### Identity and Access Management Requirements
 
