@@ -298,3 +298,98 @@ class BigQueryUploader:
                 results['table_error'] = str(e)
         
         return results
+    
+    def _parse_exercise_mapping(self, mapping_config: Dict[str, Any]) -> pd.DataFrame:
+        """Parse exercise mapping YAML config into DataFrame.
+        
+        Args:
+            mapping_config: Exercise mapping configuration from YAML
+            
+        Returns:
+            DataFrame with exercise mapping data
+        """
+        exercises = mapping_config.get('exercises', [])
+        
+        rows = []
+        for exercise_group in exercises:
+            names = exercise_group.get('names', [])
+            level1 = exercise_group.get('level1', 'unknown')
+            level2 = exercise_group.get('level2', 'unknown')
+            is_compound = exercise_group.get('compound', False)
+            
+            # Create a row for each exercise name variant
+            for name in names:
+                rows.append({
+                    'exercise_name': name.strip(),
+                    'muscle_group_level1': level1,
+                    'muscle_group_level2': level2,
+                    'is_compound': is_compound,
+                    'mapping_source': 'config',
+                    'last_updated': pd.Timestamp.now()
+                })
+        
+        return pd.DataFrame(rows)
+    
+    def upload_exercise_mapping(self, mapping_config: Dict[str, Any]) -> Dict[str, Any]:
+        """Upload exercise-to-muscle mapping to BigQuery.
+        
+        Args:
+            mapping_config: Exercise mapping configuration from YAML
+            
+        Returns:
+            Dictionary with upload statistics
+        """
+        if not self.client:
+            raise Exception("BigQuery client not initialized. Call initialize_client() first.")
+        
+        try:
+            # Parse mapping config into DataFrame
+            mapping_df = self._parse_exercise_mapping(mapping_config)
+            
+            if mapping_df.empty:
+                return {
+                    'success': False,
+                    'error': 'No exercise mappings found in configuration',
+                    'rows_uploaded': 0
+                }
+            
+            # Get connection config
+            connection_config = self.config.get('connection', {})
+            project_id = connection_config.get('project_id')
+            dataset_id = connection_config.get('dataset_id')
+            
+            # Define table schema
+            schema = [
+                bigquery.SchemaField("exercise_name", "STRING", mode="REQUIRED"),
+                bigquery.SchemaField("muscle_group_level1", "STRING", mode="REQUIRED"),
+                bigquery.SchemaField("muscle_group_level2", "STRING", mode="REQUIRED"),
+                bigquery.SchemaField("is_compound", "BOOLEAN"),
+                bigquery.SchemaField("mapping_source", "STRING"),
+                bigquery.SchemaField("last_updated", "TIMESTAMP")
+            ]
+            
+            # Upload with WRITE_TRUNCATE (replace entire table)
+            table_id = f"{project_id}.{dataset_id}.exercise_muscle_mapping"
+            job_config = bigquery.LoadJobConfig(
+                schema=schema,
+                write_disposition="WRITE_TRUNCATE"
+            )
+            
+            job = self.client.load_table_from_dataframe(
+                mapping_df, table_id, job_config=job_config
+            )
+            job.result()  # Wait for completion
+            
+            return {
+                'success': True,
+                'rows_uploaded': len(mapping_df),
+                'table': table_id
+            }
+            
+        except Exception as e:
+            return {
+                'success': False,
+                'error': str(e),
+                'rows_uploaded': 0
+            }
+
