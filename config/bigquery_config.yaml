@@ -11,7 +11,7 @@ connection:
 
 # BigQuery table schema
 table_schema:
-  - name: datetime
+  - name: date
     type: TIMESTAMP
     mode: REQUIRED
     description: "Date and time of the workout/exercise"
@@ -26,27 +26,27 @@ table_schema:
     mode: REQUIRED
     description: "Name of the exercise performed"
     
-  - name: weight
+  - name: weight_kg
     type: FLOAT
     mode: REQUIRED
-    description: "Weight used in kg or lbs"
+    description: "Weight used in kilograms"
+    
+  - name: weight_lb
+    type: FLOAT
+    mode: NULLABLE
+    description: "Weight used in pounds"
     
   - name: reps
     type: INTEGER
     mode: REQUIRED
     description: "Number of repetitions"
     
-  - name: sets
-    type: INTEGER
-    mode: NULLABLE
-    description: "Number of sets performed"
-    
   - name: notes
     type: STRING
     mode: NULLABLE
     description: "Additional notes about the exercise"
     
-  - name: duration_minutes
+  - name: duration
     type: INTEGER
     mode: NULLABLE
     description: "Duration of exercise in minutes"
