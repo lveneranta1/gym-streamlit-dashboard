@@ -2,6 +2,7 @@
 import streamlit as st
 from pathlib import Path
 from dotenv import load_dotenv
+from google.oauth2 import service_account
 from modules.config_loader import ConfigLoader
 from modules.bigquery_uploader import BigQueryUploader
 
@@ -46,6 +47,9 @@ def get_config_loader():
 def get_bigquery_uploader(_config_loader: ConfigLoader):
     """Get cached BigQuery uploader instance.
     
+    It prioritizes credentials from st.secrets['gcp_service_account'] and falls
+    back to Application Default Credentials if they are not found.
+
     Args:
         _config_loader: ConfigLoader instance (underscore prefix prevents hashing)
         
@@ -57,9 +61,19 @@ def get_bigquery_uploader(_config_loader: ConfigLoader):
         
     try:
         bq_config = _config_loader.get_bigquery_config()
+        
+        # PRIORITY 1: Load credentials from Streamlit secrets
+        credentials = None
+        if "gcp_service_account" in st.secrets:
+            creds_info = st.secrets["gcp_service_account"]
+            credentials = service_account.Credentials.from_service_account_info(creds_info)
+
+        # PRIORITY 2: If no secrets, ADC will be used by default inside initialize_client
+        
         uploader = BigQueryUploader(bq_config)
-        uploader.initialize_client()
+        uploader.initialize_client(credentials=credentials) # Pass creds
         return uploader
+        
     except Exception as e:
         st.error(f"Failed to initialize BigQuery client: {e}")
         return None
@@ -74,24 +88,39 @@ def render_sidebar(config_loader: ConfigLoader = None):
     st.sidebar.title("🏋️ Workout Uploader")
     st.sidebar.markdown("---")
     
-    # Configuration status
-    st.sidebar.subheader("Configuration Status")
-    
-    if config_loader:
+    st.sidebar.subheader("Connection")
+    if st.sidebar.button("🔌 Test BigQuery Connection"):
+        if not config_loader:
+            st.sidebar.error("Config loader not initialized.")
+            return
+
+        if "gcp_service_account" not in st.secrets:
+            st.sidebar.warning("`gcp_service_account` not in secrets.")
+            return
+
         try:
-            # Check environment variables
-            all_valid, missing = config_loader.validate_env_vars()
+            with st.spinner("Testing connection..."):
+                uploader = get_bigquery_uploader(config_loader)
+                
+                if not uploader or not uploader.client:
+                    st.sidebar.error("Connection failed.")
+                    return
+
+                test_results = uploader.test_connection()
             
-            if all_valid:
-                st.sidebar.success("✅ Environment configured")
+            if test_results.get('can_query'):
+                st.sidebar.success("Connection successful!")
+                st.sidebar.metric("Project ID", uploader.client.project)
+                if test_results.get('table_exists'):
+                    st.sidebar.metric("Workout Table Rows", f"{test_results.get('table_rows', 0):,}")
+                else:
+                    st.sidebar.warning("Workout table not found.")
             else:
-                st.sidebar.error("❌ Missing environment variables")
-                with st.sidebar.expander("Show missing variables"):
-                    for var in missing:
-                        st.write(f"- {var}")
+                st.sidebar.error("Connection failed.")
+        
         except Exception as e:
-            st.sidebar.error(f"Error checking config: {e}")
-    
+            st.sidebar.error(f"Connection test failed: {e}")
+
     st.sidebar.markdown("---")
     st.sidebar.subheader("About")
     st.sidebar.info(

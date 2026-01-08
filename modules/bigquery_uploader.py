@@ -20,9 +20,12 @@ class BigQueryUploader:
         self.client: Optional[bigquery.Client] = None
         self.upload_stats: Dict[str, Any] = {}
         
-    def initialize_client(self) -> bool:
+    def initialize_client(self, credentials=None) -> bool:
         """Initialize BigQuery client with credentials.
         
+        Args:
+            credentials: Optional Google Auth credentials object.
+            
         Returns:
             True if initialization successful, False otherwise
             
@@ -30,32 +33,24 @@ class BigQueryUploader:
             Exception: If credentials or configuration are invalid
         """
         connection_config = self.config.get('connection', {})
-        
         project_id = connection_config.get('project_id')
-        credentials_path = connection_config.get('credentials_path')
         location = connection_config.get('location', 'US')
-        
+
+        # Project ID can be overridden by credentials
+        if credentials and hasattr(credentials, 'project_id'):
+            project_id = credentials.project_id
+
         if not project_id:
-            raise ValueError("Missing GCP_PROJECT_ID in configuration")
+            raise ValueError("Missing GCP_PROJECT_ID in configuration or credentials.")
         
         try:
-            # Try to load credentials from file if path provided
-            if credentials_path and os.path.exists(credentials_path):
-                credentials = service_account.Credentials.from_service_account_file(
-                    credentials_path,
-                    scopes=["https://www.googleapis.com/auth/bigquery"]
-                )
-                self.client = bigquery.Client(
-                    credentials=credentials,
-                    project=project_id,
-                    location=location
-                )
-            else:
-                # Use default application credentials
-                self.client = bigquery.Client(
-                    project=project_id,
-                    location=location
-                )
+            # The BigQuery client will use 'credentials' if provided.
+            # If 'credentials' is None, it falls back to Application Default Credentials.
+            self.client = bigquery.Client(
+                project=project_id,
+                credentials=credentials,
+                location=location
+            )
             
             # Test connection with a simple query
             self.client.query("SELECT 1").result()
