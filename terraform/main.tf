@@ -100,18 +100,6 @@ resource "google_bigquery_table" "workouts" {
       description = "Duration of exercise in minutes"
     },
     {
-      name        = "muscle_group_level1"
-      type        = "STRING"
-      mode        = "REQUIRED"
-      description = "Primary muscle group classification (upper/lower/core/full_body)"
-    },
-    {
-      name        = "muscle_group_level2"
-      type        = "STRING"
-      mode        = "REQUIRED"
-      description = "Specific muscle group (chest/back/quads/etc)"
-    },
-    {
       name        = "upload_timestamp"
       type        = "TIMESTAMP"
       mode        = "REQUIRED"

@@ -1,12 +1,8 @@
 # BigQuery Configuration
 version: "1.0"
 
-# Connection settings (use environment variables for sensitive data)
+# Connection settings are now managed via .streamlit/secrets.toml
 connection:
-  project_id: "${GCP_PROJECT_ID}"
-  dataset_id: "${BQ_DATASET_ID}"
-  table_id: "${BQ_TABLE_ID}"
-  credentials_path: "${GOOGLE_APPLICATION_CREDENTIALS}"
   location: "europe-north1"  # BigQuery dataset location (must match dataset region)
 
 # BigQuery table schema
@@ -50,16 +46,6 @@ table_schema:
     type: INTEGER
     mode: NULLABLE
     description: "Duration of exercise in minutes"
-    
-  - name: muscle_group_level1
-    type: STRING
-    mode: REQUIRED
-    description: "Primary muscle group classification (upper/lower/core/full_body)"
-    
-  - name: muscle_group_level2
-    type: STRING
-    mode: REQUIRED
-    description: "Specific muscle group (chest/back/quads/etc)"
     
   - name: upload_timestamp
     type: TIMESTAMP

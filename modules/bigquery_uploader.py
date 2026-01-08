@@ -10,148 +10,87 @@ import os
 class BigQueryUploader:
     """Upload workout data to Google BigQuery."""
     
-    def __init__(self, bq_config: Dict[str, Any]):
+    def __init__(self, table_schema: Dict[str, Any], upload_settings: Dict[str, Any], location: str):
         """Initialize BigQuery uploader with configuration.
         
         Args:
-            bq_config: Dictionary containing BigQuery configuration
+            table_schema: The schema for the BigQuery table.
+            upload_settings: Settings for the upload job.
+            location: The GCP location for the BigQuery client.
         """
-        self.config = bq_config
+        self.table_schema_config = table_schema
+        self.upload_settings = upload_settings
+        self.location = location
+
         self.client: Optional[bigquery.Client] = None
+        self.project_id: Optional[str] = None
+        self.dataset_id: Optional[str] = None
+        self.table_id: Optional[str] = None
         self.upload_stats: Dict[str, Any] = {}
         
-    def initialize_client(self, credentials=None) -> bool:
-        """Initialize BigQuery client with credentials.
+    def initialize_client(self, project_id: str, dataset_id: str, table_id: str, credentials=None) -> bool:
+        """Initialize BigQuery client with credentials and connection info.
         
         Args:
+            project_id: The GCP Project ID.
+            dataset_id: The BigQuery Dataset ID.
+            table_id: The BigQuery Table ID.
             credentials: Optional Google Auth credentials object.
             
         Returns:
             True if initialization successful, False otherwise
-            
-        Raises:
-            Exception: If credentials or configuration are invalid
         """
-        connection_config = self.config.get('connection', {})
-        project_id = connection_config.get('project_id')
-        location = connection_config.get('location', 'US')
-
-        # Project ID can be overridden by credentials
-        if credentials and hasattr(credentials, 'project_id'):
-            project_id = credentials.project_id
-
-        if not project_id:
-            raise ValueError("Missing GCP_PROJECT_ID in configuration or credentials.")
+        self.project_id = project_id
+        self.dataset_id = dataset_id
+        self.table_id = table_id
         
         try:
-            # The BigQuery client will use 'credentials' if provided.
-            # If 'credentials' is None, it falls back to Application Default Credentials.
             self.client = bigquery.Client(
-                project=project_id,
+                project=self.project_id,
                 credentials=credentials,
-                location=location
+                location=self.location
             )
-            
-            # Test connection with a simple query
             self.client.query("SELECT 1").result()
             return True
-            
         except Exception as e:
             raise Exception(f"Failed to initialize BigQuery client: {e}")
     
     def create_table_if_not_exists(self) -> bool:
-        """Create BigQuery table if it doesn't exist.
+        """Create BigQuery table if it doesn't exist."""
+        if not all([self.client, self.project_id, self.dataset_id, self.table_id]):
+            raise Exception("BigQuery client and connection info not initialized.")
         
-        Returns:
-            True if table exists or was created successfully
-            
-        Raises:
-            Exception: If table creation fails
-        """
-        if not self.client:
-            raise Exception("BigQuery client not initialized. Call initialize_client() first.")
-        
-        connection_config = self.config.get('connection', {})
-        project_id = connection_config.get('project_id')
-        dataset_id = connection_config.get('dataset_id')
-        table_id = connection_config.get('table_id')
-        
-        if not all([project_id, dataset_id, table_id]):
-            raise ValueError("Missing BigQuery table configuration")
-        
-        # Full table reference
-        table_ref = f"{project_id}.{dataset_id}.{table_id}"
+        table_ref = f"{self.project_id}.{self.dataset_id}.{self.table_id}"
         
         try:
-            # Check if table exists
             self.client.get_table(table_ref)
             return True
         except Exception:
-            # Table doesn't exist, create it
-            pass
+            pass # Table doesn't exist, create it below
         
-        # Build schema from configuration
-        schema_config = self.config.get('table_schema', [])
-        schema = []
+        schema = [
+            bigquery.SchemaField(field['name'], field['type'], mode=field.get('mode', 'NULLABLE'), description=field.get('description', ''))
+            for field in self.table_schema_config
+        ]
         
-        for field in schema_config:
-            field_type = field['type']
-            field_mode = field.get('mode', 'NULLABLE')
-            field_name = field['name']
-            field_desc = field.get('description', '')
-            
-            schema.append(
-                bigquery.SchemaField(
-                    field_name,
-                    field_type,
-                    mode=field_mode,
-                    description=field_desc
-                )
-            )
-        
-        # Create table
         table = bigquery.Table(table_ref, schema=schema)
         
         try:
-            table = self.client.create_table(table)
+            self.client.create_table(table)
             return True
         except Exception as e:
             raise Exception(f"Failed to create BigQuery table: {e}")
     
     def _add_metadata_columns(self, df: pd.DataFrame) -> pd.DataFrame:
-        """Add metadata columns to dataframe before upload.
-        
-        Args:
-            df: DataFrame to add metadata to
-            
-        Returns:
-            DataFrame with metadata columns
-        """
+        """Add metadata columns to dataframe before upload."""
         df = df.copy()
-        
-        # Add upload timestamp
         df['upload_timestamp'] = pd.Timestamp.now()
-        
-        # Add data source
         df['data_source'] = 'csv_upload'
-        
         return df
     
     def _validate_schema(self, df: pd.DataFrame) -> bool:
-        """Validate that DataFrame matches BigQuery schema.
-        
-        Args:
-            df: DataFrame to validate
-            
-        Returns:
-            True if schema matches
-            
-        Raises:
-            ValueError: If schema doesn't match
-        """
-        schema_config = self.config.get('table_schema', [])
-        required_fields = [field['name'] for field in schema_config if field.get('mode') == 'REQUIRED']
-        
+        """Validate that DataFrame matches BigQuery schema."""
+        required_fields = [field['name'] for field in self.table_schema_config if field.get('mode') == 'REQUIRED']
         missing_fields = [field for field in required_fields if field not in df.columns]
         
         if missing_fields:
@@ -160,66 +99,31 @@ class BigQueryUploader:
         return True
     
     def upload_dataframe(self, df: pd.DataFrame) -> Dict[str, Any]:
-        """Upload dataframe to BigQuery.
-        
-        Args:
-            df: DataFrame to upload
-            
-        Returns:
-            Dictionary with upload statistics
-            
-        Raises:
-            Exception: If upload fails
-        """
+        """Upload dataframe to BigQuery."""
         if not self.client:
-            raise Exception("BigQuery client not initialized. Call initialize_client() first.")
+            raise Exception("BigQuery client not initialized.")
         
         if df.empty:
-            return {
-                'success': False,
-                'error': 'DataFrame is empty',
-                'rows_uploaded': 0
-            }
+            return {'success': False, 'error': 'DataFrame is empty', 'rows_uploaded': 0}
         
         start_time = datetime.now()
-        
-        # Add metadata columns
         df = self._add_metadata_columns(df)
         
-        # Validate schema
         try:
             self._validate_schema(df)
         except ValueError as e:
-            return {
-                'success': False,
-                'error': str(e),
-                'rows_uploaded': 0
-            }
+            return {'success': False, 'error': str(e), 'rows_uploaded': 0}
         
-        # Get table reference
-        connection_config = self.config.get('connection', {})
-        project_id = connection_config.get('project_id')
-        dataset_id = connection_config.get('dataset_id')
-        table_id = connection_config.get('table_id')
-        table_ref = f"{project_id}.{dataset_id}.{table_id}"
+        table_ref = f"{self.project_id}.{self.dataset_id}.{self.table_id}"
         
-        # Configure job
-        upload_config = self.config.get('upload', {})
         job_config = bigquery.LoadJobConfig(
-            write_disposition=upload_config.get('write_disposition', 'WRITE_APPEND'),
-            create_disposition=upload_config.get('create_disposition', 'CREATE_IF_NEEDED')
+            write_disposition=self.upload_settings.get('write_disposition', 'WRITE_APPEND'),
+            create_disposition=self.upload_settings.get('create_disposition', 'CREATE_IF_NEEDED')
         )
         
         try:
-            # Upload dataframe
-            job = self.client.load_table_from_dataframe(
-                df,
-                table_ref,
-                job_config=job_config
-            )
-            
-            # Wait for job to complete
-            timeout = upload_config.get('timeout_seconds', 300)
+            job = self.client.load_table_from_dataframe(df, table_ref, job_config=job_config)
+            timeout = self.upload_settings.get('timeout_seconds', 300)
             job.result(timeout=timeout)
             
             end_time = datetime.now()
@@ -232,62 +136,35 @@ class BigQueryUploader:
                 'table': table_ref,
                 'timestamp': end_time.isoformat()
             }
-            
             return self.upload_stats
             
         except Exception as e:
-            self.upload_stats = {
-                'success': False,
-                'error': str(e),
-                'rows_uploaded': 0
-            }
+            self.upload_stats = {'success': False, 'error': str(e), 'rows_uploaded': 0}
             return self.upload_stats
     
     def get_upload_stats(self) -> Dict[str, Any]:
-        """Get statistics from last upload.
-        
-        Returns:
-            Dictionary with upload statistics
-        """
+        """Get statistics from last upload."""
         return self.upload_stats
     
     def test_connection(self) -> Dict[str, Any]:
-        """Test BigQuery connection and configuration.
-        
-        Returns:
-            Dictionary with connection test results
-        """
-        results = {
-            'client_initialized': self.client is not None,
-            'can_query': False,
-            'table_exists': False,
-            'table_accessible': False
-        }
+        """Test BigQuery connection and configuration."""
+        results = {'client_initialized': self.client is not None, 'can_query': False, 'table_exists': False}
         
         if not self.client:
             results['error'] = 'Client not initialized'
             return results
         
-        # Test query capability
         try:
             self.client.query("SELECT 1").result()
             results['can_query'] = True
         except Exception as e:
             results['query_error'] = str(e)
         
-        # Test table access
-        connection_config = self.config.get('connection', {})
-        project_id = connection_config.get('project_id')
-        dataset_id = connection_config.get('dataset_id')
-        table_id = connection_config.get('table_id')
-        
-        if all([project_id, dataset_id, table_id]):
-            table_ref = f"{project_id}.{dataset_id}.{table_id}"
-            
+        if all([self.project_id, self.dataset_id, self.table_id]):
+            table_ref = f"{self.project_id}.{self.dataset_id}.{self.table_id}"
             try:
                 table = self.client.get_table(table_ref)
                 results['table_exists'] = True
-                results['table_accessible'] = True
                 results['table_rows'] = table.num_rows
             except Exception as e:
                 results['table_error'] = str(e)
@@ -348,10 +225,12 @@ class BigQueryUploader:
                     'rows_uploaded': 0
                 }
             
-            # Get connection config
-            connection_config = self.config.get('connection', {})
-            project_id = connection_config.get('project_id')
-            dataset_id = connection_config.get('dataset_id')
+            # Use connection info from initialized client
+            project_id = self.project_id
+            dataset_id = self.dataset_id
+
+            if not all([project_id, dataset_id]):
+                raise Exception("BigQuery client is not fully initialized with project and dataset IDs.")
             
             # Define table schema
             schema = [

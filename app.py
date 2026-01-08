@@ -85,57 +85,10 @@ if uploaded_file is not None:
                 for std_name, orig_name in summary['column_mappings'].items():
                     st.write(f"- `{orig_name}` → `{std_name}`")
         
-        # Step 2: Preview parsed data
-        st.subheader("📊 Parsed Data Preview")
-        st.dataframe(df.head(10), use_container_width=True)
-        
-        # Step 3: Data enrichment
-        st.subheader("💪 Muscle Group Mapping")
-        
-        with st.spinner("Mapping exercises to muscle groups..."):
-            exercise_mapping = config_loader.get_exercise_mapping()
-            enrichment = DataEnrichment(exercise_mapping)
-            df_enriched = enrichment.enrich_dataframe(df)
-        
-        # Show mapping summary
-        mapping_summary = enrichment.get_mapping_summary(df_enriched)
-        
-        col1, col2 = st.columns(2)
-        with col1:
-            st.metric("Unique Exercises", mapping_summary['unique_exercises'])
-        with col2:
-            st.metric("Unmapped Exercises", mapping_summary['unmapped_count'])
-        
-        # Show unmapped exercises
-        unmapped = enrichment.get_unmapped_exercises()
-        if unmapped:
-            st.warning(f"⚠️ {len(unmapped)} exercises could not be mapped exactly")
-            with st.expander("Show unmapped exercises"):
-                for ex in unmapped:
-                    suggestions = enrichment.suggest_mapping(ex)
-                    st.write(f"**{ex}**")
-                    if suggestions:
-                        st.write(f"  → Applied: {suggestions[0][0]} / {suggestions[0][1]}")
-        
-        # Show enriched data preview
-        st.subheader("📈 Enriched Data Preview")
-        preview_cols = ['exercise_name', 'weight_kg', 'reps', 'muscle_group_level1', 'muscle_group_level2']
-        available_cols = [col for col in preview_cols if col in df_enriched.columns]
-        st.dataframe(df_enriched[available_cols].head(10), use_container_width=True)
-        
-        # Show muscle group distribution
-        col1, col2 = st.columns(2)
-        with col1:
-            st.write("**Level 1 Distribution**")
-            st.bar_chart(pd.Series(mapping_summary['level1_distribution']))
-        with col2:
-            st.write("**Level 2 Distribution**")
-            st.bar_chart(pd.Series(mapping_summary['level2_distribution']).head(10))
-        
-        # Step 4: Upload to BigQuery
+        # Step 2: Upload to BigQuery
         st.subheader("☁️ Upload to BigQuery")
         
-        st.info(f"Ready to upload {len(df_enriched)} rows to BigQuery")
+        st.info(f"Ready to upload {len(df)} rows to BigQuery")
         
         if st.button("📤 Upload to BigQuery", type="primary", use_container_width=True):
             
@@ -155,7 +108,7 @@ if uploaded_file is not None:
                 st.success("✅ Table ready")
                 
                 with st.spinner("Uploading data to BigQuery..."):
-                    result = uploader.upload_dataframe(df_enriched)
+                    result = uploader.upload_dataframe(df)
                 
                 if result['success']:
                     st.success(f"🎉 Successfully uploaded {result['rows_uploaded']} rows!")
@@ -168,40 +121,6 @@ if uploaded_file is not None:
                     with col3:
                         st.metric("Table", result['table'].split('.')[-1])
                     
-                    # Upload exercise mapping table
-                    with st.spinner("Uploading exercise mapping table..."):
-                        mapping_result = uploader.upload_exercise_mapping(exercise_mapping)
-                    
-                    if mapping_result['success']:
-                        st.success(f"✅ Exercise mapping table updated ({mapping_result['rows_uploaded']} mappings)")
-                    else:
-                        st.warning(f"⚠️ Exercise mapping upload failed (non-critical): {mapping_result.get('error', 'Unknown error')}")
-                    
-                    # Refresh BigQuery views
-                    with st.spinner("Refreshing analytical views..."):
-                        from modules.bigquery_views import BigQueryViewManager
-                        
-                        bq_config = config_loader.get_bigquery_config()
-                        connection_config = bq_config.get('connection', {})
-                        project_id = connection_config.get('project_id')
-                        dataset_id = connection_config.get('dataset_id')
-                        
-                        view_manager = BigQueryViewManager(uploader.client, project_id, dataset_id)
-                        
-                        views_config = bq_config.get('views', {})
-                        if views_config.get('enabled', False) and views_config.get('refresh_on_upload', True):
-                            view_definitions = views_config.get('view_definitions', [])
-                            view_results = view_manager.refresh_all_views(view_definitions)
-                            
-                            successful_views = sum(1 for status in view_results.values() if status)
-                            total_views = len(view_results)
-                            
-                            if successful_views == total_views:
-                                st.success(f"✅ All {total_views} analytical views refreshed")
-                            else:
-                                st.warning(f"⚠️ Views refreshed: {successful_views}/{total_views} successful")
-                    
-                    st.balloons()
                 else:
                     st.error(f"❌ Upload failed: {result.get('error', 'Unknown error')}")
                     

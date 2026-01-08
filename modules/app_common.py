@@ -47,8 +47,7 @@ def get_config_loader():
 def get_bigquery_uploader(_config_loader: ConfigLoader):
     """Get cached BigQuery uploader instance.
     
-    It prioritizes credentials from st.secrets['gcp_service_account'] and falls
-    back to Application Default Credentials if they are not found.
+    It prioritizes credentials from st.secrets and passes them to the uploader.
 
     Args:
         _config_loader: ConfigLoader instance (underscore prefix prevents hashing)
@@ -60,18 +59,38 @@ def get_bigquery_uploader(_config_loader: ConfigLoader):
         return None
         
     try:
+        # Load non-sensitive BQ settings from YAML
         bq_config = _config_loader.get_bigquery_config()
-        
-        # PRIORITY 1: Load credentials from Streamlit secrets
-        credentials = None
-        if "gcp_service_account" in st.secrets:
-            creds_info = st.secrets["gcp_service_account"]
-            credentials = service_account.Credentials.from_service_account_info(creds_info)
+        table_schema = bq_config.get('table_schema', [])
+        upload_settings = bq_config.get('upload', {})
+        location = bq_config.get('connection', {}).get('location', 'US')
 
-        # PRIORITY 2: If no secrets, ADC will be used by default inside initialize_client
+        # Load sensitive connection details from Streamlit secrets
+        gcp_creds_info = st.secrets.get("gcp_service_account")
+        dataset_id = st.secrets.get("bq_dataset_id")
+        table_id = st.secrets.get("bq_table_id")
+
+        if not all([gcp_creds_info, dataset_id, table_id]):
+            st.error("Missing required BigQuery connection info in .streamlit/secrets.toml")
+            return None
         
-        uploader = BigQueryUploader(bq_config)
-        uploader.initialize_client(credentials=credentials) # Pass creds
+        project_id = gcp_creds_info.get("project_id")
+        credentials = service_account.Credentials.from_service_account_info(gcp_creds_info)
+        
+        # Instantiate uploader with non-sensitive config
+        uploader = BigQueryUploader(
+            table_schema=table_schema,
+            upload_settings=upload_settings,
+            location=location
+        )
+        
+        # Initialize client with sensitive connection details
+        uploader.initialize_client(
+            project_id=project_id,
+            dataset_id=dataset_id,
+            table_id=table_id,
+            credentials=credentials
+        )
         return uploader
         
     except Exception as e:
