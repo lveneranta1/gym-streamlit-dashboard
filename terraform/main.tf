@@ -117,6 +117,66 @@ resource "google_bigquery_table" "workouts" {
 }
 
 # ----------------------------------------------------------------------------
+# BigQuery Exercise Mapping Table
+# ----------------------------------------------------------------------------
+
+resource "google_bigquery_table" "exercise_muscle_mapping" {
+  dataset_id = google_bigquery_dataset.workout_data.dataset_id
+  table_id   = "exercise_muscle_mapping"
+
+  description = "Exercise to muscle group mapping reference table"
+
+  schema = jsonencode([
+    {
+      name        = "exercise_name"
+      type        = "STRING"
+      mode        = "REQUIRED"
+      description = "Exercise name (e.g., 'Bench Press')"
+    },
+    {
+      name        = "muscle_group_level1"
+      type        = "STRING"
+      mode        = "REQUIRED"
+      description = "Primary category: upper/lower/full_body"
+    },
+    {
+      name        = "muscle_group_level2"
+      type        = "STRING"
+      mode        = "REQUIRED"
+      description = "Movement pattern: push/pull/legs/compound"
+    },
+    {
+      name        = "muscle_group_level3"
+      type        = "STRING"
+      mode        = "REQUIRED"
+      description = "Specific muscle: chest/back/shoulders/quads/hamstrings/etc."
+    },
+    {
+      name        = "is_compound"
+      type        = "BOOLEAN"
+      mode        = "NULLABLE"
+      description = "True for compound movements"
+    },
+    {
+      name        = "mapping_source"
+      type        = "STRING"
+      mode        = "NULLABLE"
+      description = "Source of mapping: config/fuzzy/default"
+    },
+    {
+      name        = "last_updated"
+      type        = "TIMESTAMP"
+      mode        = "NULLABLE"
+      description = "When mapping was last updated"
+    },
+  ])
+
+  deletion_protection = true
+
+  depends_on = [google_bigquery_dataset.workout_data]
+}
+
+# ----------------------------------------------------------------------------
 # Service Account
 # ----------------------------------------------------------------------------
 

@@ -187,6 +187,7 @@ class BigQueryUploader:
             names = exercise_group.get('names', [])
             level1 = exercise_group.get('level1', 'unknown')
             level2 = exercise_group.get('level2', 'unknown')
+            level3 = exercise_group.get('level3', 'unknown')
             is_compound = exercise_group.get('compound', False)
             
             # Create a row for each exercise name variant
@@ -195,6 +196,7 @@ class BigQueryUploader:
                     'exercise_name': name.strip(),
                     'muscle_group_level1': level1,
                     'muscle_group_level2': level2,
+                    'muscle_group_level3': level3,
                     'is_compound': is_compound,
                     'mapping_source': 'config',
                     'last_updated': pd.Timestamp.now()
@@ -237,6 +239,7 @@ class BigQueryUploader:
                 bigquery.SchemaField("exercise_name", "STRING", mode="REQUIRED"),
                 bigquery.SchemaField("muscle_group_level1", "STRING", mode="REQUIRED"),
                 bigquery.SchemaField("muscle_group_level2", "STRING", mode="REQUIRED"),
+                bigquery.SchemaField("muscle_group_level3", "STRING", mode="REQUIRED"),
                 bigquery.SchemaField("is_compound", "BOOLEAN"),
                 bigquery.SchemaField("mapping_source", "STRING"),
                 bigquery.SchemaField("last_updated", "TIMESTAMP")

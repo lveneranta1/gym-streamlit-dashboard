@@ -13,6 +13,11 @@ output "table_id" {
   value       = google_bigquery_table.workouts.id
 }
 
+output "mapping_table_id" {
+  description = "BigQuery exercise mapping table full ID"
+  value       = google_bigquery_table.exercise_muscle_mapping.id
+}
+
 output "service_account_email" {
   description = "Service account email for application authentication"
   value       = google_service_account.app.email

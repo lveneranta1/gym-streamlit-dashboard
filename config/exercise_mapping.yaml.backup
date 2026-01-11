@@ -38,8 +38,6 @@ exercises:
       - "incline press"
       - "incline dumbbell press"
       - "incline barbell press"
-      - "incline db press"
-      - "incline dumbbell bench press"
     level1: upper
     level2: push
     level3: chest
@@ -58,12 +56,6 @@ exercises:
       - "pec fly"
       - "pec deck"
       - "flyes"
-      - "chest fly machine"
-      - "machine chest fly"
-      - "machine fly"
-      - "high to low cable fly"
-      - "high cable fly"
-      - "cable crossover high to low"
     level1: upper
     level2: push
     level3: chest
@@ -73,6 +65,29 @@ exercises:
       - "pushup"
       - "push-up"
       - "home pushups"
+    level1: upper
+    level2: push
+    level3: chest
+    
+  - names:
+      - "chest fly machine"
+      - "machine chest fly"
+      - "machine fly"
+    level1: upper
+    level2: push
+    level3: chest
+    
+  - names:
+      - "incline db press"
+      - "incline dumbbell bench press"
+    level1: upper
+    level2: push
+    level3: chest
+    
+  - names:
+      - "high to low cable fly"
+      - "high cable fly"
+      - "cable crossover high to low"
     level1: upper
     level2: push
     level3: chest
@@ -138,31 +153,23 @@ exercises:
       - "lat pulldown"
       - "cable pulldown"
       - "wide grip pulldown"
-      - "lat pull down"
       - "pulldown"
       - "machine pulldown"
       - "rope cable pulldown"
       - "one arm lat pulldown machine"
       - "iso lateral front pulldown machine"
+      - "lat pull down"
     level1: upper
     level2: pull
     level3: back
+      - "seated row machine"
+      - "one arm seated row machine"
+      - "seated wide row"
     
   - names:
       - "cable row"
       - "seated cable row"
       - "seated row"
-      - "seated row machine"
-      - "one arm seated row machine"
-      - "seated wide row"
-    level1: upper
-    level2: pull
-    level3: back
-    
-  - names:
-      - "t-bar row"
-      - "t bar row"
-      - "tbar row"
       - "tbar supported row"
     level1: upper
     level2: pull
@@ -180,6 +187,23 @@ exercises:
       - "lat cable pullover"
       - "cable pullover"
       - "straight arm pulldown"
+    level1: upper
+    level2: pull
+    level3: back
+    
+  - names:
+      - "back extension"
+      - "hyperextension"
+      - "lower back extension machine"
+      - "back extension machine"
+    level1: lower
+    level2: legs
+    level3: lower_back
+    
+  - names:
+      - "t-bar row"
+      - "t bar row"
+      - "tbar row"
     level1: upper
     level2: pull
     level3: back
@@ -210,6 +234,13 @@ exercises:
     
   - names:
       - "leg press"
+    
+  - names:
+      - "hack squat"
+      - "machine hack squat"
+    level1: lower
+    level2: legs
+    level3: quads
       - "machine leg press"
     level1: lower
     level2: legs
@@ -224,6 +255,13 @@ exercises:
     level3: quads
     
   - names:
+    
+  - names:
+      - "good morning"
+      - "barbell good morning"
+    level1: lower
+    level2: legs
+    level3: hamstrings
       - "lunge"
       - "walking lunge"
       - "reverse lunge"
@@ -233,16 +271,11 @@ exercises:
     level2: legs
     level3: quads
     
-  - names:
+  -   - "horizontal calf raise machine"
+      - "smith machine calf raise"
+    names:
       - "bulgarian split squat"
       - "split squat"
-    level1: lower
-    level2: legs
-    level3: quads
-    
-  - names:
-      - "hack squat"
-      - "machine hack squat"
     level1: lower
     level2: legs
     level3: quads
@@ -264,13 +297,6 @@ exercises:
     level1: lower
     level2: legs
     level3: hamstrings
-    
-  - names:
-      - "good morning"
-      - "barbell good morning"
-    level1: lower
-    level2: legs
-    level3: hamstrings
 
   # Leg exercises - Glutes
   - names:
@@ -287,40 +313,12 @@ exercises:
       - "standing calf raise"
       - "seated calf raise"
       - "machine calf raise"
-      - "horizontal calf raise machine"
-      - "smith machine calf raise"
     level1: lower
     level2: legs
     level3: calves
 
-  # Leg exercises - Lower Back/Core
-  - names:
-      - "back extension"
-      - "hyperextension"
-      - "lower back extension machine"
-      - "back extension machine"
-    level1: lower
-    level2: legs
-    level3: lower_back
-
   # Shoulder exercises
-  - names:
-      - "overhead press"
-      - "military press"
-      - "shoulder press"
-      - "barbell overhead press"
-      - "ohp"
-      - "strict press"
-    level1: upper
-    level2: push
-    level3: shoulders
-    
-  - names:
-      - "dumbbell shoulder press"
-      - "dumbbell press"
-      - "seated dumbbell press"
-      - "db shoulder press"
-      - "shoulder dumbbell press"
+  -   - "shoulder dumbbell press"
     level1: upper
     level2: push
     level3: shoulders
@@ -336,11 +334,32 @@ exercises:
   - names:
       - "machine shoulder press"
       - "shoulder press machine"
+    names:
+      - "overhead press"
+      - "military press"
+      - "shoulder press"
+      - "barbell overhead press"
+      - "ohp"
+      - "lateral cable raise"
+      - "cable lateral raise"
+      - "strict press"
     level1: upper
     level2: push
     level3: shoulders
     
   - names:
+      - "dumbbell shoulder press"
+      - "dumbbell press"
+      - "seated dumbbell press"
+      - "db shoulder press"
+    level1: upper
+    level2: push
+    level3: shoulders
+    
+  -   - "seated reverse fly machine"
+      - "reverse cable fly"
+      - "one arm reverse fly"
+    names:
       - "arnold press"
     level1: upper
     level2: push
@@ -351,8 +370,6 @@ exercises:
       - "side raise"
       - "dumbbell lateral raise"
       - "lat raise"
-      - "lateral cable raise"
-      - "cable lateral raise"
     level1: upper
     level2: push
     level3: shoulders
@@ -366,14 +383,15 @@ exercises:
     
   - names:
       - "rear delt fly"
+      - "dumbbell biceps curl"
+      - "incline biceps db curl"
       - "rear delt raise"
       - "reverse fly"
       - "reverse flyes"
-      - "seated reverse fly machine"
-      - "reverse cable fly"
-      - "one arm reverse fly"
     level1: upper
     level2: pull
+      - "cable rope hammer curl"
+      - "rope hammer curl"
     level3: shoulders
     
   - names:
@@ -381,6 +399,8 @@ exercises:
       - "face pulls"
       - "cable face pull"
     level1: upper
+      - "preacher curl machine"
+      - "machine preacher curl"
     level2: pull
     level3: shoulders
 
@@ -392,8 +412,7 @@ exercises:
       - "dumbbell curl"
       - "bb curl"
       - "db curl"
-      - "dumbbell biceps curl"
-      - "incline biceps db curl"
+      - "cable biceps curl"
     level1: upper
     level2: pull
     level3: biceps
@@ -401,8 +420,6 @@ exercises:
   - names:
       - "hammer curl"
       - "dumbbell hammer curl"
-      - "cable rope hammer curl"
-      - "rope hammer curl"
     level1: upper
     level2: pull
     level3: biceps
@@ -410,8 +427,6 @@ exercises:
   - names:
       - "preacher curl"
       - "preacher curls"
-      - "preacher curl machine"
-      - "machine preacher curl"
     level1: upper
     level2: pull
     level3: biceps
@@ -425,7 +440,8 @@ exercises:
   - names:
       - "cable curl"
       - "cable bicep curl"
-      - "cable biceps curl"
+      - "overhead cable triceps press"
+      - "cable overhead extension"
     level1: upper
     level2: pull
     level3: biceps
@@ -435,21 +451,21 @@ exercises:
       - "tricep extension"
       - "overhead extension"
       - "overhead tricep extension"
+      - "home dips"
       - "skull crusher"
       - "lying tricep extension"
       - "skullcrusher"
-      - "overhead cable triceps press"
-      - "cable overhead extension"
     level1: upper
     level2: push
     level3: triceps
     
   - names:
+      - "triceps cable pushdown"
+      - "one arm triceps cable pushdown"
       - "tricep dip"
       - "dips"
       - "chest dip"
       - "triceps dip"
-      - "home dips"
     level1: upper
     level2: push
     level3: triceps
@@ -459,8 +475,6 @@ exercises:
       - "cable pushdown"
       - "rope pushdown"
       - "triceps pushdown"
-      - "triceps cable pushdown"
-      - "one arm triceps cable pushdown"
     level1: upper
     level2: push
     level3: triceps
